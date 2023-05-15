@@ -1,6 +1,6 @@
 import {FastifyReply, FastifyRequest} from "fastify"
 import { CreatePlaceSchema, idPlaceSchema } from "./places.schemas"
-import { createPlace, getPlaceByIdGoogle, calculateAvg, getPlaces} from "./places.service"
+import { createPlace, getPlaceByIdGoogle, calculateAvg, getPlaceById, getPlaces} from "./places.service"
 
 export async function getPlacesHandler(
         request: FastifyRequest<{Querystring:{lat:string, lng:string}}>,
@@ -89,4 +89,16 @@ export async function caculateRating(
         rta.response = rsp
         return reply.code(500).send(rta)
     }
+}
+
+export async function getPlaceByIdHandler(
+    request: FastifyRequest<{
+        Params: {
+            id: string
+        }
+    }>,
+    reply: FastifyReply
+
+){
+    return await getPlaceById(request.params.id)
 }

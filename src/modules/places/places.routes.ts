@@ -1,5 +1,5 @@
 import { type FastifyInstance } from "fastify";
-import { searchPlaceByPlaceGoogle, savePlaces, caculateRating, getPlacesHandler } from "./places.controller"
+import { searchPlaceByPlaceGoogle, savePlaces, caculateRating, getPlacesHandler, getPlaceByIdHandler } from "./places.controller"
 import { $placeRef } from "./places.schemas"
 
 export async function PlaceRoutes(app: FastifyInstance) {
@@ -23,6 +23,7 @@ export async function PlaceRoutes(app: FastifyInstance) {
             }
         }
     }, savePlaces)
+    // }, registerPlaces)
 
     app.get("/searchByIdGoogle/:id_google_place", {
         schema: {
@@ -44,6 +45,19 @@ export async function PlaceRoutes(app: FastifyInstance) {
         }
 
     }, caculateRating)
+
+    app.get('/:id', {
+        schema: {
+            tags: ['Places'],
+            params: {
+                type: "object",
+                required: ["id"],
+                // properties: { id: { type: 'string', pattern: "^[0-9a-fA-F]{24}$" } }
+                properties: { id: { type: 'string' } }
+             }
+        },
+    }, getPlaceByIdHandler)
 }
+
 
 export default PlaceRoutes
