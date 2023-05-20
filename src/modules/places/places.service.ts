@@ -7,16 +7,24 @@ export type Location = {
     lat: string,
     lng: string
 }
- 
- export interface Place {
-    place_id: string,
-    icon: string,
-    name: string,
-    location: Location,   
-    types: string
+
+export async function getPlaceBy(input: CreatePlaceSchema) {
+   return await prisma.place.findMany({
+      where: input
+   }) 
 }
 
-const endPoint = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
+export async function getPhotoUrl(photo_reference: string){
+   const endpoint='https://maps.googleapis.com/maps/api/place/photo' 
+   const url = `${endpoint}?maxwidth=400&photo_reference=${photo_reference}&key=${GOOGLE_MAPS_KEY}`
+   
+   const urlImage = await fetch(url)
+      .then( res => res.ok && res.url)
+      .then( data =>  data)
+      console.log( urlImage )
+   return urlImage
+}
+
 
 const getPlacefromdb = async (place:any) => {
    const placedb = await prisma.place.findFirst({
@@ -40,7 +48,8 @@ const getPlacefromdb = async (place:any) => {
 }
 
 export async function getPlaces(location: Location) {
-   const url = `${endPoint}?location=${location.lat} ${location.lng}&radius=5000&key=${GOOGLE_MAPS_KEY}&accessibility=accessible`
+   const endPoint = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
+   const url = `${endPoint}?location=${location.lat} ${location.lng}&radius=5000&type=restaurant&key=${GOOGLE_MAPS_KEY}&accessibility=accessible`
    const result = await fetch(url)
       .then(res => {
          if(res.ok){
@@ -58,11 +67,13 @@ export async function getPlaces(location: Location) {
                   name: item.name,
                   location: {lat: item.geometry.location},   
                   types: item.types,
+                  // photo: await getPhotoUrl(item.photos[0].photo_reference),
                   raiting: res?.raiting || 0,
                   comments: res?.commets || []
                }
             })
-         ) 
+         )  
+         console.log( lista )
          return lista
       })
       return result;
@@ -151,11 +162,25 @@ export async function createFavoritesPlaces(userId: number, placeId: number) {
    })
 }
 
+// export async function getfavoritesPlaces(user_id:number){
+//    const google_places_ids = await prisma.userOnPlaces.findMany({
+//       where: {
+//          userId: user_id,
+//       },
+//       include: {
+//          place: {
+//             include:{
+                  
+//             }
+//          }, 
+
+//       }
+//    })
+// }
+
 export async function getPlaceById(id_place: string){
-   console.log( id_place );
-   // const idPlace = 'ChIJFfyzTTeuEmsRuMxvFyNRfbk'
-   const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id_place}&key=${GOOGLE_MAPS_KEY}`
-            // 'https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJN1t_tDeuEmsRUsoyG83frY4&fields=name%2Crating%2Cformatted_phone_number&key=YOUR_API_KEY',
+   const endpoint = `https://maps.googleapis.com/maps/api/place/details/json`;
+   const url = `${endpoint}?place_id=${id_place}&fields=name%2Ctype%2Cwheelchair_accessible_entrance&key=${GOOGLE_MAPS_KEY}`
 
    try {
       const res = await fetch(url)
@@ -166,9 +191,8 @@ export async function getPlaceById(id_place: string){
    } catch (error) {
       console.error(error);
    }
-   // console.log( data );
-      // .then(res => res.json())
-      // .then(data => console.log( data ))
 }
 
+// 41.386725, 2.165333
 // getPlaceById('ChIJ4U8HhjiuEmsRyevJVTxWbFo')
+getPlaces({lat:'-33.8688197' , lng: '151.2092955'})

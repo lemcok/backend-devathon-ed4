@@ -58,6 +58,7 @@ model UserOnPlaces {
   userId Int 
   place Place @relation(fields:[placeId], references: [id])
   placeId Int
+  
   @@id([userId, placeId])
 }
 

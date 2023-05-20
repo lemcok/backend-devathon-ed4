@@ -1,0 +1,16 @@
+@key=AIzaSyClGupjS6RwxMmII4v3-bIcmsfCdFcY9w0
+
+### GET Photo by photo_reference from google maps
+@endpoint=https://maps.googleapis.com/maps/api/place/photo
+@photo_reference=AZose0nJdLoRn5X25MJedqh6CNVW30W6qUOHWEVvUdU0xNrvGICKRzPIowCm11Ni85GsQXiizMLZpLFGDlX3DSqyMjarEAwHT9iw3IknfSUYj9QWBIpE3FnKC4qK5eUAvg8covHUecNHFEoQNbClsiwnggGho8RZXuH-d5i1ZJ2FRxkb-aqJ
+GET {{endpoint}}?maxwidth=400&photo_reference={{photo_reference}}&key={{key}}
+
+### ===> GET a places list
+@lat=41.38552012563526
+@lng=41.38552012563526
+GET http://localhost:4000/places/list?lat={{lat}}&lng={{lng}}
+
+
+### ===> GET favorites places
+@user_id=1
+GET http://localhost:4000/places/favorites?user_id={{user_id}}
