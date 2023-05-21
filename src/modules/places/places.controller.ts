@@ -90,3 +90,23 @@ export async function caculateRating(
         return reply.code(500).send(rta)
     }
 }
+
+export async function detailPlaceById(
+    request: FastifyRequest<{
+        Params: CreatePlaceSchema
+    }>,
+    reply: FastifyReply
+) {
+    console.log(request.params)
+    try {
+        const jwt = await request.jwtVerify()
+        const dec = await request.jwtDecode()
+        console.log(dec)
+        return reply.code(201).send(dec)
+    } catch (error) {
+        if(error) {
+            console.log("No tiene token");
+        }
+        return reply.code(200).send("Error")
+    }
+}

@@ -78,11 +78,13 @@ export function buildApp(){
    
    app.decorate(
       "authenticate",
-      async (request: FastifyRequest, reply: FastifyReply) => {
+      async (request: FastifyRequest, reply: FastifyReply, done: any) => {
          try {
             await request.jwtVerify();
          } catch (e) {
-            return reply.send(e);
+            if(e) {
+               done()
+            }
          }
       }
    )

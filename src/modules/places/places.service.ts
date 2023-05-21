@@ -90,3 +90,7 @@ export async function calculateAvg(id_place: number) {
         }
     })
 }
+
+export async function datailPlaceByIdGoogle(input:CreatePlaceSchema) {
+    
+}
