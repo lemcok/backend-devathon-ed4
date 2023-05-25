@@ -20,9 +20,12 @@ const createUserSchema = z.object({
 })
 
 const updateUserSchema = z.object({
-    id: z.number(),
+    id:z.number(),
     ...userCore,
-    current_location: string()
+})
+
+const bodyUpdateUserSchema = z.object({
+    ...userCore
 })
 
 const updatePasswordSchema = z.object({
@@ -66,7 +69,6 @@ const responseOkSchema = z.object({
             id: z.number(),
             name: z.string(),
             email: z.string(),
-            current_location: z.string()
         }).optional()
     })    
 })
@@ -99,5 +101,6 @@ export const {schemas: userSchema, $ref } = buildJsonSchemas({
     loginResponseSchema,
     responseOkSchema,
     activateSchema,
-    emailSchema
+    emailSchema,
+    bodyUpdateUserSchema
 }, {$id:'User_Schemas'})

@@ -90,3 +90,28 @@ export async function calculateAvg(id_place: number) {
         }
     })
 }
+
+export const getDetails = async (place_id: string) => {
+  const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${GOOGLE_MAPS_KEY}&fields=formatted_address,formatted_phone_number,geometry,name,international_phone_number,opening_hours,photos,place_id,rating,reviews,user_ratings_total,website,types,wheelchair_accessible_entrance`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+  const newData =  {
+  formatted_address: data.result.formatted_address,
+  formatted_phone_number: data.result.formatted_phone_number,
+  geometry: data.result.geometry,
+  name: data.result.name,
+  international_phone_number: data.result.international_phone_number,
+  opening_hours: data.result.opening_hours,
+  photos: data.result.photos,
+  place_id: data.result.place_id,
+  rating: data.result.rating,
+  reviews: data.result.reviews,
+  user_ratings_total: data.result.user_ratings_total,
+  website: data.result.website,
+  types: data.result.types.filter(filteredTypes),
+  wheelchair_accessible_entrance: "wheelchair_accessible_entrance" in data.result ? data.result.wheelchair_accessible_entrance : false
+};
+
+  return newData;
+};

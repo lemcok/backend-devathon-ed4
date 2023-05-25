@@ -33,11 +33,10 @@ export async function updateUserById(input: UpdateUserSchema){
       data: {
          email: input.email,
          name: input.name,
-         current_location: input.current_location
       }
    })
-   const {id, name, email, current_location} = user
-   return {id, name, email, current_location}
+   const {id, name, email} = user
+   return {id, name, email}
 }
 
 export async function updatePasswordById(input: UpdatePasswordSchema){
