@@ -1,6 +1,6 @@
 import {FastifyReply, FastifyRequest} from "fastify"
 import { CreatePlaceSchema, idPlaceSchema } from "./places.schemas"
-import { createPlace, getPlaceByIdGoogle, calculateAvg, getPlaces} from "./places.service"
+import { createPlace, getPlaceByIdGoogle, calculateAvg, getPlaces, getDetails} from "./places.service"
 
 export async function getPlacesHandler(
         request: FastifyRequest<{Querystring:{lat:string, lng:string}}>,
@@ -16,6 +16,27 @@ export async function getPlacesHandler(
     reply
     .code(200)
     .send(places)
+}
+
+interface MyQuery {
+    place_id:string
+}
+
+export async function getDetailHandler(
+  request: FastifyRequest<{ Querystring: MyQuery }>,
+  reply: FastifyReply
+) {
+    const {place_id} = request.query;
+    if (!place_id) {
+        return reply
+      .code(404)
+      .send({ status: "failed", error: "place_id is required" });
+    }
+    const result = await getDetails(place_id);
+    reply.code(200).send({
+    status: "success",
+    data: [result],
+    });
 }
 
 export async function searchPlaceByPlaceGoogle(

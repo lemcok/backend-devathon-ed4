@@ -72,7 +72,7 @@ async function UserRoutes(app: FastifyInstance){
       preHandler: [app.authenticate],
       schema: {
          tags: ['User'],
-         body: $ref('updateUserSchema'),
+         body: $ref('bodyUpdateUserSchema'),
          response: {
             200: $ref('responseOkSchema')
          }

@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { getUsers, createUser, findUserByEmail, updateUserById, updatePasswordById, setActivateUser, getUserUnique } from "./users.service";
-import { CreateUserInput, LoginInput, UpdateUserSchema, UpdatePasswordSchema, ActivateSchema, EmailSchema } from "./users.schemas";
+import { CreateUserInput, LoginInput, UpdateUserSchema, bodyUpdateUserSchema, UpdatePasswordSchema, ActivateSchema, EmailSchema } from "./users.schemas";
 import { verifyPassword } from "../../utils/hash";
 import { SENDGRID_API_KEY } from "../../../config/";
 import exp from "constants";
@@ -61,20 +61,29 @@ export async function registerUserHandler(
    }
 }
 
+interface User extends FastifyRequest{
+   user:{
+      id:number,
+      name:string,
+      email:string
+   }
+}
 export async function updateUser(
-   request: FastifyRequest<{
-      Body: UpdateUserSchema
-   }>,
+   request:any,
    reply: FastifyReply
 ) {
    const body = request.body
+   const {id} = request.user;
    const rta = { status: false, response: {}}
    const rsp = {code: 401, msn: '', rta: {}}
 
    try {
       rta.status = true
       rsp.code = 201
-      const user = await updateUserById(body)
+      const user = await updateUserById({
+         id,
+         ...body
+      })
       rsp.msn = (user) ? "Ok" : "Error"
       rsp.rta = user
       
