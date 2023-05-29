@@ -147,7 +147,9 @@ export async function calculateAvg(id_place: number) {
             id: id_place
         },
         data: {
-            rating: avg._avg.raiting_comment ? avg._avg.raiting_comment : null
+            rating: avg._avg.raiting_comment 
+                    ? avg._avg.raiting_comment 
+                    : null
         }
     })
 }
